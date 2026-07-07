@@ -22,3 +22,13 @@ jobs:
 
       - name: Verify AWS connection
         run: aws sts get-caller-identity
+      - name: Invoke Lambda
+        run: |
+          aws lambda invoke \
+            --function-name ExampleFunction \
+            --payload '{"mensaje":"Hola desde GitHub Actions"}' \
+            --cli-binary-format raw-in-base64-out \
+            response.json
+
+          echo "Respuesta de la Lambda:"
+          cat response.json
