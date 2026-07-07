@@ -1,5 +1,6 @@
 name: AWS Connection Test
 
+# Trigger push main -> Ejecuta el WorkFlow
 on:
   push:
     branches:
@@ -10,9 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Clona el repositorio en el runner
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Configura las credenciales para acceder a AWS
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -20,8 +23,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
           aws-region: us-east-1
 
+      # Comprueba que la autenticación con AWS funciona
       - name: Verify AWS connection
         run: aws sts get-caller-identity
+
+      # Invoca la función Lambda y muestra su respuesta
       - name: Invoke Lambda
         run: |
           aws lambda invoke \
@@ -30,5 +36,5 @@ jobs:
             --cli-binary-format raw-in-base64-out \
             response.json
 
-          echo "Respuesta de la Lambda:"
+          echo "Mensaje Lambda:"
           cat response.json
